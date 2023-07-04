@@ -98,6 +98,10 @@ dependencies {
     implementation 'com.orhanobut:logger:2.2.0'
     // 分页
     implementation "androidx.paging:paging-compose:1.0.0-alpha17"
+    // 播放器
+    implementation "androidx.media3:media3-exoplayer:1.0.2"
+    implementation "androidx.media3:media3-exoplayer-dash:1.0.2"
+    implementation "androidx.media3:media3-ui:1.0.2"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -1,5 +1,6 @@
 package com.zj.windmill
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +12,10 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.zj.windmill.data.remote.VideoUrlParser
+import com.zj.windmill.model.Video
 import com.zj.windmill.ui.home.HomeScreen
+import com.zj.windmill.ui.play.PlayScreen
 import com.zj.windmill.ui.search.SearchScreen
 import com.zj.windmill.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val videoUrlParser = VideoUrlParser(this)
         setContent {
             MyApplicationTheme {
                 Surface(
@@ -32,11 +37,15 @@ class MainActivity : ComponentActivity() {
                     AnimatedNavHost(navController = navController, startDestination = "home") {
                         composable("home") {
                             HomeScreen(
-                                onVideoClick = {},
+                                onVideoClick = {
+                                    navController.navigate("play")
+                                },
                                 onSearchClick = {
                                     navController.navigate("search")
                                 },
-                                onHistoryClick = {}
+                                onHistoryClick = {
+
+                                }
                             )
                         }
                         composable("search") {
@@ -46,6 +55,15 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onVideoClick = {}
                             )
+                        }
+                        composable("play/{video}") { backStackEntry ->
+                            val video = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                backStackEntry.arguments?.getParcelable("video", Video::class.java)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                backStackEntry.arguments?.getParcelable("video")
+                            }
+                            PlayScreen(video!!, videoUrlParser = videoUrlParser)
                         }
                     }
                 }
