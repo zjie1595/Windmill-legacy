@@ -7,4 +7,5 @@
     <string name="search_video">搜索视频</string>
     <string name="sample_video_title">海贼王</string>
     <string name="no_data">暂无数据\n</string>
+    <string name="search">搜索</string>
 </resources>

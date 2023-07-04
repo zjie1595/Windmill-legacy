@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.search.SearchActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerInside"
+                android:src="@drawable/back" />
+
+            <com.hjq.shape.view.ShapeEditText
+                android:id="@+id/query"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/search"
+                android:drawablePadding="5dp"
+                android:drawableTint="#989da3"
+                android:hint="@string/search_animation"
+                android:paddingHorizontal="10dp"
+                android:textSize="14sp"
+                app:shape_radius="20dp"
+                app:shape_solidColor="#f1f2f4"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="@string/search"
+                android:textAppearance="?attr/textAppearanceSubtitle2" />
+        </LinearLayout>
+
+        <com.drake.statelayout.StateLayout
+            android:id="@+id/page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_video"
+                android:layout_width="match_parent"
+                android:layout_margin="8dp"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/item_video_vertical" />
+        </com.drake.statelayout.StateLayout>
+    </LinearLayout>
+</layout>

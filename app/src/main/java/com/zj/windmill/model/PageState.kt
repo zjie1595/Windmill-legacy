@@ -9,3 +9,5 @@ object Loading : PageState()
 data class Error(
     val errorMessage: String = "网络异常"
 ) : PageState()
+
+object None : PageState()

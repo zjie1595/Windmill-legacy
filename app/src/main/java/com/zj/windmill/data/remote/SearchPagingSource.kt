@@ -29,12 +29,12 @@ class SearchPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Video> {
         return try {
             val page = params.key ?: 0
-            val videos = withContext(Dispatchers.IO) {
+            val searchResult = withContext(Dispatchers.IO) {
                 searchPageParser.parseSearchPage(keyword, page)
-            }
-            val nextKey = if (videos.isEmpty()) null else page + 1
+            } ?: return LoadResult.Error(Throwable("unknown error"))
+            val nextKey = if (searchResult.hasMore) page + 1 else null
             LoadResult.Page(
-                data = videos,
+                data = searchResult.videos,
                 prevKey = null,
                 nextKey = nextKey
             )

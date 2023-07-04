@@ -3,6 +3,8 @@ package com.zj.windmill.data.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zj.windmill.model.Video
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * 过滤器分页源
@@ -27,11 +29,14 @@ class FilterPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Video> {
         return try {
             val page = params.key ?: 0
-            val videos = catalogPageParser.filter(filterWrapper, page)
+            val searchResult = withContext(Dispatchers.IO) {
+                catalogPageParser.filter(filterWrapper, page)
+            } ?: return LoadResult.Error(Throwable("unknown error"))
+            val nextKey = if (searchResult.hasMore) page + 1 else null
             LoadResult.Page(
-                data = videos,
+                data = searchResult.videos,
                 prevKey = null,
-                nextKey = page + 1
+                nextKey = nextKey
             )
         } catch (e: Exception) {
             LoadResult.Error(e.cause ?: Throwable("unknown error"))

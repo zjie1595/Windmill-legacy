@@ -80,6 +80,9 @@ dependencies {
     implementation 'com.github.liangjingkanji:BRV:1.4.1'
     // 布局文件直接写shape
     implementation 'com.github.getActivity:ShapeView:8.5'
+    // 分页
+    def paging_version = "3.1.1"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

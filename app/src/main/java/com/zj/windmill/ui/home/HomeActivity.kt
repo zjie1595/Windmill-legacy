@@ -1,5 +1,6 @@
 package com.zj.windmill.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +16,10 @@ import com.zj.windmill.R
 import com.zj.windmill.databinding.ActivityHomeBinding
 import com.zj.windmill.model.Error
 import com.zj.windmill.model.Loading
+import com.zj.windmill.model.None
 import com.zj.windmill.model.Success
 import com.zj.windmill.model.Video
+import com.zj.windmill.ui.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -73,6 +76,10 @@ class HomeActivity : AppCompatActivity() {
                             Success -> {
                                 binding.state.showContent()
                             }
+
+                            None -> {
+
+                            }
                         }
                         bindingAdapter.models = it.homePage.videoGroups
                         val bannerVideos = it.homePage.bannerVideos
@@ -83,6 +90,17 @@ class HomeActivity : AppCompatActivity() {
                             .setAdapter(bannerAdapter)
                             .setIndicator(CircleIndicator(this@HomeActivity))
                     }
+            }
+        }
+
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.search -> {
+                    startActivity(Intent(this, SearchActivity::class.java))
+                    true
+                }
+
+                else -> false
             }
         }
     }

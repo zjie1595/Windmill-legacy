@@ -3,7 +3,7 @@ package com.zj.windmill.data.remote
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.reflect.TypeToken
 import com.orhanobut.logger.Logger
-import com.zj.windmill.model.Video
+import com.zj.windmill.model.SearchResult
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.regex.Pattern
@@ -44,11 +44,16 @@ class CatalogPageParser @Inject constructor(
      * @param [page] 页码，从0开始
      * @return [List<Video>]
      */
-    fun filter(filterWrapper: FilterWrapper, page: Int): List<Video> {
+    fun filter(filterWrapper: FilterWrapper, page: Int): SearchResult? {
         val catalogPageUrl = "${filterWrapper.filterUrl(host)}/?pagesize=24&pageindex=${page}"
-        val document = fetchDocument(catalogPageUrl) ?: return emptyList()
+        val document = fetchDocument(catalogPageUrl) ?: return null
         val filterResultElements =
             document.select("body > div:nth-child(4) > div.fire.l > div.lpic > ul > li")
-        return parseVideosFromElements(filterResultElements)
+        val videos = parseVideosFromElements(filterResultElements)
+        val hasMore =
+            document.select("body > div:nth-child(4) > div.fire.l > div.pages > a").firstOrNull {
+                it.text() == "下一页"
+            } != null
+        return SearchResult(videos = videos, hasMore = hasMore)
     }
 }

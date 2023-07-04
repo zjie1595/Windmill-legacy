@@ -1,8 +1,7 @@
 package com.zj.windmill.data.remote
 
-import com.zj.windmill.model.Video
+import com.zj.windmill.model.SearchResult
 import okhttp3.OkHttpClient
-import org.jsoup.nodes.Document
 import javax.inject.Inject
 
 class SearchPageParser @Inject constructor(
@@ -15,11 +14,15 @@ class SearchPageParser @Inject constructor(
      * @param [page] 页面 从0开始
      * @return [List<Video>]
      */
-    fun parseSearchPage(keyword: String, page: Int): List<Video> {
+    fun parseSearchPage(keyword: String, page: Int): SearchResult? {
         val searchPageUrl = "${host}/s_all?kw=${keyword}&pagesize=24&pageindex=${page}"
-        val document = fetchDocument(searchPageUrl) ?: return emptyList()
+        val document = fetchDocument(searchPageUrl) ?: return null
         val searchResultElements =
             document.select("body > div:nth-child(4) > div.fire.l > div.lpic > ul > li")
-        return parseVideosFromElements(searchResultElements)
+        val videos = parseVideosFromElements(searchResultElements)
+        val hasMore = document.select("body > div:nth-child(4) > div.fire.l > div.pages > a").find {
+            it.text() == "下一页"
+        } != null
+        return SearchResult(videos = videos, hasMore = hasMore)
     }
 }
