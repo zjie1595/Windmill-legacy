@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="m"
+            type="com.zj.windmill.model.Video" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/item_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:layout_margin="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:image_url="@{m.coverImageUrl}"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/RoundedCorner_5dp"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{m.title}"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            tools:text="@string/sample_video_title" />
+    </LinearLayout>
+</layout>

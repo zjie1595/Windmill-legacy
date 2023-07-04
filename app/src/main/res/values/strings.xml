@@ -5,4 +5,6 @@
     <string name="watch_history">观看历史</string>
     <string name="search_animation">搜索动漫</string>
     <string name="search_video">搜索视频</string>
+    <string name="sample_video_title">海贼王</string>
+    <string name="no_data">暂无数据\n</string>
 </resources>

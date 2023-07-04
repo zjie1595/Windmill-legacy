@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="m"
+            type="com.zj.windmill.model.Video" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/item_home_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:image_url="@{m.coverImageUrl}"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/RoundedCorner_10dp"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{m.title}"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="@color/white"
+            tools:text="海贼王" />
+    </FrameLayout>
+</layout>
