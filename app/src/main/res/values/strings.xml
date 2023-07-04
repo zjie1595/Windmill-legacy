@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Windmill</string>
+    <string name="app_name">风车动漫</string>
+    <string name="network_error">网络异常</string>
+    <string name="empty_data">暂无数据</string>
+    <string name="watch_history">观看历史</string>
+    <string name="search_animation">搜索动漫</string>
 </resources>

@@ -18,9 +18,15 @@ class HomePageParser @Inject constructor(
      */
     fun parseHomePage(): HomePage? {
         val document = fetchDocument(host) ?: return null
+        val videoGroups = parseVideoGroups(document)
+        val list = mutableListOf<Any>()
+        for (videoGroup in videoGroups) {
+            list += videoGroup.title
+            list.addAll(videoGroup.videos)
+        }
         return HomePage(
             bannerVideos = parseBannerVideos(document),
-            videoGroups = parseVideoGroups(document),
+            videoGroups = list,
             weeklyRankingVideos = parseWeeklyRankingVideos(document)
         )
     }
@@ -41,7 +47,7 @@ class HomePageParser @Inject constructor(
      * @return [List<VideoGroup>]
      */
     private fun parseVideoGroups(document: Document): List<VideoGroup> {
-        val groupElements = document.select("body > div:nth-child(11) > div.firs.l > dtit")
+        val groupElements = document.select("body > div > div.firs.l > div.dtit")
         return groupElements.map { dtit ->
             val groupTitle = dtit.select("h2 > a").text()
             val nextElementSibling = dtit.nextElementSibling() ?: return@map VideoGroup(

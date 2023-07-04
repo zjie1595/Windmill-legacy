@@ -17,6 +17,7 @@
         android:theme="@style/Theme.Windmill"
         tools:targetApi="31">
         <activity
+            android:theme="@style/Theme.Windmill"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

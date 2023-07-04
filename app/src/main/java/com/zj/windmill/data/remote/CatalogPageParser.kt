@@ -1,7 +1,7 @@
 package com.zj.windmill.data.remote
 
 import com.blankj.utilcode.util.GsonUtils
-import com.google.common.reflect.TypeToken
+import com.google.gson.reflect.TypeToken
 import com.orhanobut.logger.Logger
 import com.zj.windmill.model.Video
 import okhttp3.OkHttpClient
@@ -13,7 +13,6 @@ class CatalogPageParser @Inject constructor(
     okHttpClient: OkHttpClient
 ) : PageParser(okHttpClient) {
 
-    @Suppress("UnstableApiUsage")
     fun parseLabelMap(): Map<String, List<String>> {
         val labelMap = mutableMapOf<String, List<String>>()
         try {
