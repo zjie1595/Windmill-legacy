@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zj.windmill.data.remote.HomePageParser
 import com.zj.windmill.model.HomePage
 import com.zj.windmill.ui.widget.ERROR
+import com.zj.windmill.ui.widget.LOADING
 import com.zj.windmill.ui.widget.NONE
 import com.zj.windmill.ui.widget.SUCCESS
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun init() {
+        _uiState.update {
+            it.copy(state = LOADING)
+        }
         viewModelScope.launch(Dispatchers.IO) {
             val homePage = homePageParser.parseHomePage()
             if (homePage != null) {
