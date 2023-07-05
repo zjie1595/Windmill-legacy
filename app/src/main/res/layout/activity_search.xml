@@ -7,7 +7,7 @@
 
         <variable
             name="m"
-            type="com.zj.windmill.ui.search.SearchViewModel" />
+            type="com.zj.windmill.ui.search.SearchActivity" />
     </data>
 
     <LinearLayout
@@ -33,8 +33,6 @@
             <com.hjq.shape.view.ShapeEditText
                 android:id="@+id/query"
                 search_action="@{() -> m.performSearch()}"
-                soft_key_board_visible="@{m.showSoftKeyboard}"
-                android:onTextChanged="@{(text,start,end,count) -> m.onQueryTextUpdate(text)}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -46,7 +44,6 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
-                android:text="@{m.queryText}"
                 android:textSize="14sp"
                 app:shape_radius="20dp"
                 app:shape_solidColor="#f1f2f4"
@@ -64,9 +61,8 @@
                 android:textAppearance="?attr/textAppearanceSubtitle2" />
         </LinearLayout>
 
-        <com.drake.statelayout.StateLayout
+        <com.drake.brv.PageRefreshLayout
             android:id="@+id/page"
-            page_state="@{m.pageState}"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -74,10 +70,11 @@
                 android:id="@+id/rv_video"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="3"
+                tools:layout_margin="8dp"
                 tools:listitem="@layout/item_video_vertical" />
-        </com.drake.statelayout.StateLayout>
+        </com.drake.brv.PageRefreshLayout>
     </LinearLayout>
 </layout>

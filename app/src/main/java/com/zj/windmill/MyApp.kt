@@ -63,5 +63,6 @@ class MyApp : Application(), ImageLoaderFactory {
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
             ClassicsFooter(context)
         }
+        PageRefreshLayout.startIndex = 0
     }
 }

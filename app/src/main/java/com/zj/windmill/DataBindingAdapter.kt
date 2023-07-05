@@ -8,6 +8,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.blankj.utilcode.util.KeyboardUtils
+import com.drake.brv.PageRefreshLayout
 import com.drake.statelayout.StateLayout
 import com.zj.windmill.model.Error
 import com.zj.windmill.model.Loading
@@ -41,6 +42,28 @@ object DataBindingAdapter {
 
             Success -> {
                 stateLayout.showContent()
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("page_state")
+    fun bindPageState(pageRefreshLayout: PageRefreshLayout, pageState: PageState) {
+        when (pageState) {
+            is Error -> {
+                pageRefreshLayout.showError()
+            }
+
+            Loading -> {
+                pageRefreshLayout.showLoading()
+            }
+
+            None -> {
+
+            }
+
+            Success -> {
+                pageRefreshLayout.showContent()
             }
         }
     }
