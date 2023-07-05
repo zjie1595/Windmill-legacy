@@ -11,7 +11,7 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import com.scwang.smart.refresh.footer.ClassicsFooter
-import com.scwang.smart.refresh.header.MaterialHeader
+import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import dagger.hilt.android.HiltAndroidApp
 
@@ -58,7 +58,7 @@ class MyApp : Application(), ImageLoaderFactory {
             setRetryIds(R.id.msg, R.id.iv)
         }
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
-            MaterialHeader(context)
+            ClassicsHeader(context)
         }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
             ClassicsFooter(context)
