@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.ComponentActivity
 import androidx.annotation.UiThread
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CancellableContinuation
@@ -14,7 +14,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class VideoUrlParser(
-    private val activity: ComponentActivity
+    private val activity: AppCompatActivity
 ) : DefaultLifecycleObserver {
 
     private var currentContinuation: CancellableContinuation<String?>? = null

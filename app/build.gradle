@@ -71,9 +71,8 @@ dependencies {
     // 日志
     implementation 'com.orhanobut:logger:2.2.0'
     // 播放器
-    implementation "androidx.media3:media3-exoplayer:1.0.2"
-    implementation "androidx.media3:media3-exoplayer-dash:1.0.2"
-    implementation "androidx.media3:media3-ui:1.0.2"
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.5-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.5-release-jitpack'
     // 轮播图
     implementation 'io.github.youth5201314:banner:2.2.2'
     // RecyclerView工具

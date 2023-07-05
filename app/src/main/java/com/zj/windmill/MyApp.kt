@@ -13,7 +13,12 @@ import com.orhanobut.logger.PrettyFormatStrategy
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.shuyu.gsyvideoplayer.cache.CacheFactory
+import com.shuyu.gsyvideoplayer.player.PlayerFactory
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import dagger.hilt.android.HiltAndroidApp
+import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
+import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager
 
 @HiltAndroidApp
 class MyApp : Application(), ImageLoaderFactory {
@@ -22,6 +27,7 @@ class MyApp : Application(), ImageLoaderFactory {
         super.onCreate()
         initLogger()
         initBrv()
+        initGsyVideoPlayer()
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -64,5 +70,11 @@ class MyApp : Application(), ImageLoaderFactory {
             ClassicsFooter(context)
         }
         PageRefreshLayout.startIndex = 0
+    }
+
+    private fun initGsyVideoPlayer() {
+        PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
+        CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java)
+        GSYVideoType.setRenderType(GSYVideoType.SUFRACE)
     }
 }
