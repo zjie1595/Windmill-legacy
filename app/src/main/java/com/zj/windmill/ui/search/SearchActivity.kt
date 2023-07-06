@@ -1,7 +1,5 @@
 package com.zj.windmill.ui.search
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.KeyboardUtils
 import com.drake.brv.annotaion.DividerOrientation
@@ -11,6 +9,7 @@ import com.zj.windmill.R
 import com.zj.windmill.data.remote.SearchPageParser
 import com.zj.windmill.databinding.ActivitySearchBinding
 import com.zj.windmill.model.Video
+import com.zj.windmill.ui.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,21 +17,16 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySearchBinding
+class SearchActivity : BaseActivity<ActivitySearchBinding>() {
 
     @Inject
     lateinit var searchPageParser: SearchPageParser
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.m = this
-        binding.lifecycleOwner = this
+    override fun ActivitySearchBinding.initBinding() {
+        m = this@SearchActivity
+        lifecycleOwner = this@SearchActivity
 
-        binding.rvVideo.divider {
+        rvVideo.divider {
             setDivider(16, true)
             orientation = DividerOrientation.GRID
         }.setup {
@@ -42,7 +36,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        binding.page.onRefresh {
+        page.onRefresh {
             lifecycleScope.launch {
                 val keyword = binding.query.text.toString()
                 val searchResult = withContext(Dispatchers.IO) {
@@ -54,11 +48,11 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        binding.back.setOnClickListener {
+        back.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.query.requestFocus()
+        query.requestFocus()
     }
 
     fun performSearch() {

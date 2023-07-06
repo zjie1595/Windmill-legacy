@@ -1,8 +1,6 @@
 package com.zj.windmill.ui.home
 
 import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drake.brv.annotaion.DividerOrientation
@@ -13,6 +11,7 @@ import com.zj.windmill.R
 import com.zj.windmill.data.remote.HomePageParser
 import com.zj.windmill.databinding.ActivityHomeBinding
 import com.zj.windmill.model.Video
+import com.zj.windmill.ui.BaseActivity
 import com.zj.windmill.ui.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -22,17 +21,13 @@ import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     @Inject
     lateinit var homePageParser: HomePageParser
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val bindingAdapter = binding.rvVideo.divider {
+    override fun ActivityHomeBinding.initBinding() {
+        val bindingAdapter = rvVideo.divider {
             setDivider(16, true)
             orientation = DividerOrientation.GRID
         }.setup {
@@ -42,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
                 onVideoClick(getModel())
             }
         }
-        (binding.rvVideo.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+        (rvVideo.layoutManager as? GridLayoutManager)?.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return try {
@@ -57,8 +52,8 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
-        binding.page.setEnableLoadMore(false)
-        binding.page.onRefresh {
+        page.setEnableLoadMore(false)
+        page.onRefresh {
             lifecycleScope.launch {
                 val homePage = withContext(Dispatchers.IO) {
                     withTimeoutOrNull(10_000L) {
@@ -78,12 +73,12 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.page.showLoading()
+        page.showLoading()
 
-        binding.toolbar.setOnMenuItemClickListener {
+        toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.search -> {
-                    startActivity(Intent(this, SearchActivity::class.java))
+                    startActivity(Intent(this@HomeActivity, SearchActivity::class.java))
                     true
                 }
 
