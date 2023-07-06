@@ -2,8 +2,8 @@ package com.zj.windmill.data.remote
 
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.reflect.TypeToken
-import com.orhanobut.logger.Logger
 import com.zj.windmill.model.SearchResult
+import com.zj.windmill.util.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.regex.Pattern

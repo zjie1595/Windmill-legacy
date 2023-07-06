@@ -2,7 +2,9 @@ package com.zj.windmill.data.remote
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.UiThread
@@ -17,20 +19,49 @@ class VideoUrlParser(
     private val activity: AppCompatActivity
 ) : DefaultLifecycleObserver {
 
-    private var currentContinuation: CancellableContinuation<String?>? = null
+    private var currentContinuation: CancellableContinuation<Result<String>>? = null
+
+    private var currentPageUrl: String? = null
 
     private val webViewClient = object : WebViewClient() {
-        override fun shouldOverrideUrlLoading(
+        override fun shouldInterceptRequest(
             view: WebView,
             request: WebResourceRequest
-        ): Boolean {
+        ): WebResourceResponse? {
             val requestUrl = request.url.toString()
             if (requestUrl.contains("m3u8")) {
+                val videoUrl = requestUrl.split("url=").getOrNull(1)
                 if (currentContinuation?.isActive == true) {
-                    currentContinuation?.resume(requestUrl)
+                    if (videoUrl.isNullOrBlank()) {
+                        currentContinuation?.resume(Result.failure(Throwable("解析失败")))
+                    } else {
+                        currentContinuation?.resume(Result.success(videoUrl))
+                    }
                 }
             }
-            return super.shouldOverrideUrlLoading(view, request)
+            return super.shouldInterceptRequest(view, request)
+        }
+
+        override fun onReceivedError(
+            view: WebView,
+            request: WebResourceRequest,
+            error: WebResourceError
+        ) {
+            super.onReceivedError(view, request, error)
+            if (request.url.toString() == currentPageUrl && currentContinuation?.isActive == true) {
+                currentContinuation?.resume(Result.failure(Throwable("解析失败")))
+            }
+        }
+
+        override fun onReceivedHttpError(
+            view: WebView,
+            request: WebResourceRequest,
+            errorResponse: WebResourceResponse
+        ) {
+            super.onReceivedHttpError(view, request, errorResponse)
+            if (request.url.toString() == currentPageUrl && currentContinuation?.isActive == true) {
+                currentContinuation?.resume(Result.failure(Throwable("解析失败")))
+            }
         }
     }
 
@@ -41,28 +72,14 @@ class VideoUrlParser(
             javaScriptEnabled = true
             domStorageEnabled = true
         }
-    }
-
-    private fun init() {
-        activity.lifecycle.addObserver(this)
-        webView.webViewClient = webViewClient
-        val content = activity.findViewById<ViewGroup>(android.R.id.content)
-        val layoutParams = ViewGroup.LayoutParams(0, 0)
-        content.addView(webView, layoutParams)
+        webViewClient = this@VideoUrlParser.webViewClient
     }
 
     init {
-        init()
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
-        webView.onResume()
-    }
-
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
-        webView.onPause()
+        activity.lifecycle.addObserver(this)
+        val content = activity.findViewById<ViewGroup>(android.R.id.content)
+        val layoutParams = ViewGroup.LayoutParams(0, 0)
+        content.addView(webView, layoutParams)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -73,13 +90,17 @@ class VideoUrlParser(
 
     @UiThread
     @SuppressLint("SetJavaScriptEnabled")
-    suspend fun parseVideoUrl(playPageUrl: String) = suspendCancellableCoroutine { continuation ->
-        continuation.invokeOnCancellation {
-            if (continuation.isActive) {
-                continuation.resume(null)
+    suspend fun parseVideoUrl(playPageUrl: String): Result<String> =
+        suspendCancellableCoroutine { continuation ->
+            currentPageUrl = playPageUrl
+            currentContinuation?.cancel()
+            currentContinuation = continuation
+
+            continuation.invokeOnCancellation {
+                if (continuation.isActive) {
+                    continuation.resume(Result.failure(Throwable("解析取消")))
+                }
             }
+            webView.loadUrl(playPageUrl)
         }
-        currentContinuation = continuation
-        webView.loadUrl(playPageUrl)
-    }
 }

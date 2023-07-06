@@ -5,9 +5,7 @@ import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.zj.windmill.R
-import com.zj.windmill.data.remote.VideoUrlParser
 import com.zj.windmill.databinding.ActivityPlayBinding
-import com.zj.windmill.model.Video
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

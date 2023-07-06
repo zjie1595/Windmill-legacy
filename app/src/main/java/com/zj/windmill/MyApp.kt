@@ -7,9 +7,6 @@ import com.blankj.utilcode.util.AppUtils
 import com.drake.brv.PageRefreshLayout
 import com.drake.brv.utils.BRV
 import com.drake.statelayout.StateConfig
-import com.orhanobut.logger.AndroidLogAdapter
-import com.orhanobut.logger.Logger
-import com.orhanobut.logger.PrettyFormatStrategy
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -25,7 +22,6 @@ class MyApp : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-        initLogger()
         initBrv()
         initGsyVideoPlayer()
     }
@@ -36,21 +32,6 @@ class MyApp : Application(), ImageLoaderFactory {
             builder.logger(CoilLogger())
         }
         return builder.build()
-    }
-
-    private fun initLogger() {
-        val prettyFormatStrategy = PrettyFormatStrategy.newBuilder()
-            .showThreadInfo(false)
-            .methodCount(0)
-            .methodOffset(7)
-            .tag("Windmill")
-            .build()
-        val logAdapter = object : AndroidLogAdapter(prettyFormatStrategy) {
-            override fun isLoggable(priority: Int, tag: String?): Boolean {
-                return AppUtils.isAppDebug()
-            }
-        }
-        Logger.addLogAdapter(logAdapter)
     }
 
     private fun initBrv() {

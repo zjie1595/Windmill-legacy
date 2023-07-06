@@ -1,7 +1,7 @@
 package com.zj.windmill.data.remote
 
-import com.orhanobut.logger.Logger
 import com.zj.windmill.model.Video
+import com.zj.windmill.util.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
@@ -15,7 +15,7 @@ open class PageParser @Inject constructor(
 
     protected val host = "https://www.dm530w.org"
 
-    protected fun constructImageUrl(imageElements: Elements): String {
+    private fun constructImageUrl(imageElements: Elements): String {
         val src = imageElements.attr("src")
         return if (src.startsWith("http")) src else "https:$src"
     }
