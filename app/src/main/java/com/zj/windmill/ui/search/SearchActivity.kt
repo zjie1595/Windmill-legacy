@@ -1,5 +1,6 @@
 package com.zj.windmill.ui.search
 
+import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.KeyboardUtils
 import com.drake.brv.annotaion.DividerOrientation
@@ -10,6 +11,7 @@ import com.zj.windmill.data.remote.SearchPageParser
 import com.zj.windmill.databinding.ActivitySearchBinding
 import com.zj.windmill.model.Video
 import com.zj.windmill.ui.BaseActivity
+import com.zj.windmill.ui.play.PlayActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,6 +63,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
     }
 
     private fun onVideoClick(video: Video) {
-
+        startActivity(Intent(this, PlayActivity::class.java).apply {
+            putExtra("video", video)
+        })
     }
 }

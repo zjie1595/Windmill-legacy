@@ -13,6 +13,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import kotlin.coroutines.resume
 
 class VideoUrlParser(
@@ -30,7 +32,10 @@ class VideoUrlParser(
         ): WebResourceResponse? {
             val requestUrl = request.url.toString()
             if (requestUrl.contains("m3u8")) {
-                val videoUrl = requestUrl.split("url=").getOrNull(1)
+                val videoUrl = runCatching {
+                    val url = requestUrl.split("url=").getOrNull(1)
+                    URLDecoder.decode(url, StandardCharsets.UTF_8.name())
+                }.getOrNull()
                 if (currentContinuation?.isActive == true) {
                     if (videoUrl.isNullOrBlank()) {
                         currentContinuation?.resume(Result.failure(Throwable("解析失败")))

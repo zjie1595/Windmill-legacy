@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zj.windmill.data.remote.DetailPageParser
+import com.zj.windmill.data.remote.VideoUrlParser
 import com.zj.windmill.databinding.ActivityPlayBinding
 import com.zj.windmill.model.Episode
 import com.zj.windmill.model.Video
@@ -18,17 +19,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
-//    private val sampleVideoUrl =
-//        "https://vip.ffzy-play3.com/20230412/10868_2dee1b0a/index.m3u8"
-
     @Inject
     lateinit var detailPageParser: DetailPageParser
 
+    private lateinit var videoUrlParser: VideoUrlParser
+
     override fun ActivityPlayBinding.initBinding() {
-//        videoPlayer.setUp(sampleVideoUrl, true, "")
-//        videoPlayer.seekOnStart = 10_000L
-//        videoPlayer.startPlayLogic()
         parsePlaylists()
+        videoUrlParser = VideoUrlParser(this@PlayActivity)
     }
 
     @Suppress("DEPRECATION")
@@ -70,6 +68,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     fun onEpisodeClick(episode: Episode) {
+        val playPageUrl = episode.playPageUrl
+        lifecycleScope.launch {
+            videoUrlParser.parseVideoUrl(playPageUrl).onSuccess { videoUrl ->
+                binding.videoPlayer.setUp(videoUrl, true, "")
+                binding.videoPlayer.startPlayLogic()
+            }.onFailure {
 
+            }
+        }
     }
 }
