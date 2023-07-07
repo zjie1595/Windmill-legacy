@@ -21,3 +21,8 @@
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
+
+#保证BaseActivity之类的写法不被混淆
+-keepclassmembernames class * extends androidx.databinding.ViewDataBinding {
+      public static ** inflate(...);
+ }

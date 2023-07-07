@@ -93,21 +93,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     private fun onVideoClick(video: Video) {
-//        val videoUrlParser = VideoUrlParser(this)
-//        lifecycleScope.launch {
-//            val detailPage = withContext(Dispatchers.IO) {
-//                detailPageParser.parseDetailPage(video.detailPageUrl)
-//            } ?: return@launch
-//            Logger.i("detailPage $detailPage")
-//            val playlist = detailPage.playlists[1]
-//            Logger.i("playlist ${playlist}")
-//            val playPageUrl = playlist.episodes.firstOrNull()?.playPageUrl ?: return@launch
-//            Logger.i("playPageUrl ${playPageUrl}")
-//            val videoUrl = videoUrlParser.parseVideoUrl(playPageUrl)
-//            Logger.i("videoUrl $videoUrl")
-//        }
         startActivity(Intent(this, PlayActivity::class.java).apply {
             putExtra("video", video)
         })
+    }
+
+    override fun enableBackPress(): Boolean {
+        return false
     }
 }
