@@ -68,13 +68,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     fun onEpisodeClick(episode: Episode) {
+        binding.videoPlayer.showLoading()
         val playPageUrl = episode.playPageUrl
         lifecycleScope.launch {
             videoUrlParser.parseVideoUrl(playPageUrl).onSuccess { videoUrl ->
                 binding.videoPlayer.setUp(videoUrl, true, "")
                 binding.videoPlayer.startPlayLogic()
             }.onFailure {
-
+                binding.videoPlayer.showError("解析失败")
             }
         }
     }
