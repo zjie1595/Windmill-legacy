@@ -58,6 +58,8 @@ class MyApp : Application(), ImageLoaderFactory {
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
         CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java)
         GSYVideoType.setRenderType(GSYVideoType.SUFRACE)
-        Debuger.enable()
+        if (AppUtils.isAppDebug()) {
+            Debuger.enable()
+        }
     }
 }
