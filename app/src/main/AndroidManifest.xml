@@ -22,6 +22,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.Windmill.Play"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.search.SearchActivity"

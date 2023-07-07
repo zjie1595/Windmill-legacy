@@ -12,6 +12,7 @@ import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.shuyu.gsyvideoplayer.cache.CacheFactory
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
+import com.shuyu.gsyvideoplayer.utils.Debuger
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import dagger.hilt.android.HiltAndroidApp
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
@@ -57,5 +58,6 @@ class MyApp : Application(), ImageLoaderFactory {
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
         CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java)
         GSYVideoType.setRenderType(GSYVideoType.SUFRACE)
+        Debuger.enable()
     }
 }

@@ -8,10 +8,12 @@ import com.drake.brv.utils.divider
 import com.drake.brv.utils.setup
 import com.youth.banner.indicator.CircleIndicator
 import com.zj.windmill.R
+import com.zj.windmill.data.remote.DetailPageParser
 import com.zj.windmill.data.remote.HomePageParser
 import com.zj.windmill.databinding.ActivityHomeBinding
 import com.zj.windmill.model.Video
 import com.zj.windmill.ui.BaseActivity
+import com.zj.windmill.ui.play.PlayActivity
 import com.zj.windmill.ui.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     @Inject
     lateinit var homePageParser: HomePageParser
+
+    @Inject
+    lateinit var detailPageParser: DetailPageParser
 
     override fun ActivityHomeBinding.initBinding() {
         val bindingAdapter = rvVideo.divider {
@@ -101,5 +106,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 //            val videoUrl = videoUrlParser.parseVideoUrl(playPageUrl)
 //            Logger.i("videoUrl $videoUrl")
 //        }
+        startActivity(Intent(this, PlayActivity::class.java).apply {
+            putExtra("video", video)
+        })
     }
 }
