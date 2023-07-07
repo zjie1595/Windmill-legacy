@@ -1,6 +1,7 @@
 package com.zj.windmill
 
 import android.app.Application
+import android.widget.TextView
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.blankj.utilcode.util.AppUtils
@@ -44,6 +45,14 @@ class MyApp : Application(), ImageLoaderFactory {
             loadingLayout = R.layout.layout_loading
 
             setRetryIds(R.id.msg, R.id.iv)
+
+            onError {
+                if (tag is String) {
+                    val errorMessage = tag as String
+                    val msg = findViewById<TextView>(R.id.msg)
+                    msg.text = errorMessage
+                }
+            }
         }
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
             ClassicsHeader(context)

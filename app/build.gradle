@@ -81,6 +81,8 @@ dependencies {
     // 分页
     def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime:$paging_version"
+    // 简化fragment binding写法
+    implementation 'com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.2'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
