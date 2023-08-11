@@ -3,9 +3,9 @@ package com.zj.windmill.data.remote
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.reflect.TypeToken
 import com.zj.windmill.model.SearchResult
-import com.zj.windmill.util.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class CatalogPageParser @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Logger.e(e.cause, "Failed to parse label map")
+            Timber.e(e.cause, "parse label map failed")
         }
         return labelMap
     }

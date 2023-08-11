@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.drake.brv.PageRefreshLayout
 import com.drake.brv.utils.BRV
 import com.drake.statelayout.StateConfig
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -16,6 +17,7 @@ import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.utils.Debuger
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager
 
@@ -26,6 +28,8 @@ class MyApp : Application(), ImageLoaderFactory {
         super.onCreate()
         initBrv()
         initGsyVideoPlayer()
+        initTimber()
+        AndroidThreeTen.init(this)
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -34,6 +38,10 @@ class MyApp : Application(), ImageLoaderFactory {
             builder.logger(CoilLogger())
         }
         return builder.build()
+    }
+
+    private fun initTimber() {
+        Timber.plant(Timber.DebugTree())
     }
 
     private fun initBrv() {

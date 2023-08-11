@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -13,8 +14,12 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.zj.windmill.R
+import com.zj.windmill.data.local.AppDatabase
+import com.zj.windmill.data.remote.DetailPageParser
+import com.zj.windmill.data.remote.VideoUrlParser
+import javax.inject.Inject
 
-class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
+class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPlayer {
     @Suppress("unused")
     constructor(context: Context?, fullFlag: Boolean?) : super(context, fullFlag)
     constructor(context: Context?) : super(context)
@@ -23,8 +28,24 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
     private var orientationUtils: OrientationUtils? = null
 
     private lateinit var errorMessageView: TextView
+    private lateinit var loadingMessageView: TextView
     private lateinit var lockScreenLeft: ImageView
     private lateinit var time: TextView
+
+    @Inject
+    lateinit var detailPageParser: DetailPageParser
+
+    @Inject
+    lateinit var database: AppDatabase
+
+    val playController by lazy {
+        PlayController(
+            VideoUrlParser(context as AppCompatActivity),
+            detailPageParser,
+            database,
+            this
+        )
+    }
 
     private val videoCallback = object : VideoCallback() {
         override fun onPrepared(url: String?, vararg objects: Any?) {
@@ -35,6 +56,11 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
         override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
             super.onQuitFullscreen(url, *objects)
             orientationUtils?.backToProtVideo()
+        }
+
+        override fun onComplete(url: String?, vararg objects: Any?) {
+            super.onComplete(url, *objects)
+            // 尝试播放下一集？？？
         }
     }
 
@@ -66,6 +92,7 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
     override fun init(context: Context) {
         super.init(context)
         errorMessageView = findViewById(R.id.error_message)
+        loadingMessageView = findViewById(R.id.loading)
         lockScreenLeft = findViewById<ImageView?>(R.id.lock_screen_left).apply {
             isVisible = false
             setOnClickListener {
@@ -259,8 +286,9 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
         imageView.setImageResource(resId)
     }
 
-    fun showLoading() {
+    fun showLoading(loadingText: String = "加载中...") {
         setStateAndUi(CURRENT_STATE_PREPAREING)
+        loadingMessageView.text = loadingText
     }
 
     override fun onAutoCompletion() {
@@ -285,5 +313,33 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver {
     override fun hideAllWidget() {
         super.hideAllWidget()
         setViewShowState(lockScreenLeft, GONE)
+    }
+
+    override fun contentPosition(): Long {
+        return currentPositionWhenPlaying
+    }
+
+    override fun contentDuration(): Long {
+        return duration
+    }
+
+    override fun playVideo(videoUrl: String, title: String?, contentPosition: Long?) {
+        setUp(videoUrl, true, title)
+        if (contentPosition != null) {
+            seekOnStart = contentPosition
+        }
+        startPlayLogic()
+    }
+
+    override fun showParseError(throwable: Throwable) {
+        showError("视频解析失败")
+    }
+
+    override fun showParsing() {
+        showLoading("视频解析中...")
+    }
+
+    override fun showUnknownError() {
+        showError("未知异常")
     }
 }

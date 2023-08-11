@@ -8,6 +8,7 @@ import com.drake.brv.utils.divider
 import com.drake.brv.utils.setup
 import com.youth.banner.indicator.CircleIndicator
 import com.zj.windmill.R
+import com.zj.windmill.data.local.AppDatabase
 import com.zj.windmill.data.remote.DetailPageParser
 import com.zj.windmill.data.remote.HomePageParser
 import com.zj.windmill.databinding.ActivityHomeBinding
@@ -20,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,7 +33,20 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     @Inject
     lateinit var detailPageParser: DetailPageParser
 
+    @Inject
+    lateinit var database: AppDatabase
+
     override fun ActivityHomeBinding.initBinding() {
+        lifecycleScope.launch {
+            var video: Video? = Video(
+                title = "测试标题",
+                coverImageUrl = "测试封面图片地址",
+                detailPageUrl = "测试详情页地址"
+            )
+            val videoId = database.videoDao().insert(video!!)
+            video = database.videoDao().getById(videoId)
+            Timber.i("video = $video")
+        }
         val bindingAdapter = rvVideo.divider {
             setDivider(16, true)
             orientation = DividerOrientation.GRID

@@ -1,12 +1,12 @@
 package com.zj.windmill.data.remote
 
 import com.zj.windmill.model.Video
-import com.zj.windmill.util.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import timber.log.Timber
 import javax.inject.Inject
 
 open class PageParser @Inject constructor(
@@ -33,7 +33,7 @@ open class PageParser @Inject constructor(
             val html = okHttpClient.newCall(request).execute().body?.string() ?: return null
             Jsoup.parse(html)
         }.onFailure {
-            Logger.e(it, "Failed to parse page")
+            Timber.e(it, "parse page failed")
         }.getOrNull()
     }
 

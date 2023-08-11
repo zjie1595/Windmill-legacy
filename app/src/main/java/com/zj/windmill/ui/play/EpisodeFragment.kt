@@ -38,7 +38,7 @@ class EpisodeFragment : Fragment(R.layout.fragment_episode) {
         }.setup {
             addType<Episode>(R.layout.item_episode)
             onClick(R.id.item_episode) {
-                (activity as? PlayActivity)?.onEpisodeClick(getModel())
+                (activity as? PlayActivity)?.switchEpisode(getModel())
             }
         }.models = episodeList
     }
