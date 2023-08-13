@@ -18,10 +18,14 @@
         android:gravity="center"
         android:minHeight="40dp"
         android:paddingVertical="4dp"
+        android:selected="@{m.selected}"
         android:text="@{m.title}"
         android:textAppearance="?attr/textAppearanceButton"
         app:shape_radius="4dp"
         app:shape_solidColor="#f2f5fa"
+        app:shape_solidSelectedColor="@color/purple_700"
+        app:shape_textColor="@color/black"
+        app:shape_textSelectedColor="@color/white"
         tools:layout_margin="2dp"
         tools:text="第一集" />
 </layout>

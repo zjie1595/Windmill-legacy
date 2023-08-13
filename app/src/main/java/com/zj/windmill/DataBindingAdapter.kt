@@ -1,5 +1,6 @@
 package com.zj.windmill
 
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
@@ -25,5 +26,11 @@ object DataBindingAdapter {
                 false
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:selected")
+    fun bindViewSelected(view: View, selected: Boolean) {
+        view.isSelected = selected
     }
 }

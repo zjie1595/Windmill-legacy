@@ -1,6 +1,7 @@
 package com.zj.windmill.model
 
 import android.os.Parcelable
+import androidx.databinding.BaseObservable
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -16,5 +17,6 @@ data class Episode(
     val title: String,
     val playPageUrl: String,
     var contentPosition: Long? = null,
-    var contentDuration: Long? = null
-) : Parcelable
+    var contentDuration: Long? = null,
+    var selected: Boolean = false
+) : Parcelable, BaseObservable()

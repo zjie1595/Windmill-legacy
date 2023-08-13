@@ -1,5 +1,6 @@
 package com.zj.windmill.ui.play
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
@@ -17,6 +19,11 @@ import com.zj.windmill.R
 import com.zj.windmill.data.local.AppDatabase
 import com.zj.windmill.data.remote.DetailPageParser
 import com.zj.windmill.data.remote.VideoUrlParser
+import com.zj.windmill.model.Video
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPlayer {
@@ -30,13 +37,15 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPla
     private lateinit var errorMessageView: TextView
     private lateinit var loadingMessageView: TextView
     private lateinit var lockScreenLeft: ImageView
-    private lateinit var time: TextView
+    private lateinit var timeTextView: TextView
 
     @Inject
     lateinit var detailPageParser: DetailPageParser
 
     @Inject
     lateinit var database: AppDatabase
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
     val playController by lazy {
         PlayController(
@@ -45,6 +54,23 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPla
             database,
             this
         )
+    }
+
+    private val lifecycleScope by lazy {
+        (context as AppCompatActivity).lifecycleScope
+    }
+
+    fun setup(video: Video?) {
+        lifecycleScope.launch {
+            playController.setupVideo(video)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        coroutineScope.launch {
+            playController.exitPage()
+        }
     }
 
     private val videoCallback = object : VideoCallback() {
@@ -83,6 +109,7 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPla
         isNeedOrientationUtils = true
         isShowFullAnimation = false
         isNeedLockFull = true
+        isShowDragProgressTextOnSeekBar = true
         setLockClickListener { _, lock ->
             orientationUtils?.isEnable = !lock
         }
@@ -107,7 +134,7 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPla
                 }
             }
         }
-        time = findViewById(R.id.time)
+        timeTextView = findViewById(R.id.time)
     }
 
     override fun onPause(owner: LifecycleOwner) {
@@ -341,5 +368,55 @@ class MyVideoPlayer : StandardGSYVideoPlayer, DefaultLifecycleObserver, VideoPla
 
     override fun showUnknownError() {
         showError("未知异常")
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun setStateAndUi(state: Int) {
+        super.setStateAndUi(state)
+        if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
+            updateTimeTextView()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun showDragProgressTextOnSeekBar(fromUser: Boolean, progress: Int) {
+        super.showDragProgressTextOnSeekBar(fromUser, progress)
+        if (fromUser && isShowDragProgressTextOnSeekBar) {
+            updateTimeTextView()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateTimeTextView() {
+        timeTextView.text = "${mCurrentTimeTextView.text}/${mTotalTimeTextView.text}"
+    }
+
+    override fun setProgressAndTime(
+        progress: Long,
+        secProgress: Long,
+        currentTime: Long,
+        totalTime: Long,
+        forceChange: Boolean
+    ) {
+        super.setProgressAndTime(progress, secProgress, currentTime, totalTime, forceChange)
+        if (currentTime > 0) {
+            updateTimeTextView()
+        }
+    }
+
+    override fun resetProgressAndTime() {
+        super.resetProgressAndTime()
+        if (mProgressBar == null || mTotalTimeTextView == null || mCurrentTimeTextView == null) {
+            return
+        }
+        updateTimeTextView()
+    }
+
+    override fun loopSetProgressAndTime() {
+        super.loopSetProgressAndTime()
+        if (mProgressBar == null || mTotalTimeTextView == null || mCurrentTimeTextView == null) {
+            return
+        }
+        updateTimeTextView()
     }
 }
